@@ -32,8 +32,8 @@ public class Ball : MonoBehaviour
             }
 
             //공들 제거
-            Destroy(otherBall.gameObject);
-            Destroy(gameObject);
+            //Destroy(otherBall.gameObject);
+           // Destroy(gameObject);
         }
     }
 }
