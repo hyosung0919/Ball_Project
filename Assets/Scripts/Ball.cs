@@ -19,12 +19,17 @@ public class Ball : MonoBehaviour
 
         if (otherBall != null && !otherBall.hasMered && otherBall.ballType == ballType)     //충돌한 것이 공이고 타입이 같다면 (합쳐지지 않았을 경우)
         {
-            hasMered = true;
+            hasMered = true;                //합쳤다고 표시
             otherBall.hasMered = true;
 
             Vector3 mergePosition = (transform.position + otherBall.transform.position) / 2f;       //두 공의 중간 위치 계산
 
             //게임 매니저에서 Merge 구현된 것을 호출
+            BallGame gameManager = FindObjectOfType<BallGame>();
+            if(gameManager != null)
+            {
+                gameManager.MergeBalls(ballType, mergePosition);            //함수를 실행하고 호출한다.
+            }
 
             //공들 제거
             Destroy(otherBall.gameObject);
