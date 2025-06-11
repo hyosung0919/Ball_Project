@@ -6,34 +6,88 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public int ballType;                                            //공 타입 ( 0 : 탁구공 1: 야구공 2: 농구공 3: 축구공 ) int로 index 설정
+    public int ballType;                                            //공 타입  int로 index 설정
 
     public bool hasMered = false;                                   //공이 합쳐졌는지 확인하는 플래그
+    private float gameOverZoneTimer = 0f;
+    private bool inGameOverZone = false;
+    private BallShooter ballShooter;
+
+    void Start()
+    {
+        ballShooter = FindObjectOfType<BallShooter>(); // BallShooter 참조 얻기
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (hasMered)                                               //이미 합쳐진 공은 무시
-            return;
+        if (hasMered) return;
 
-        Ball otherBall = collision.gameObject.GetComponent<Ball>();             //다른 공과 충돌했는지 확인
+        Ball otherBall = collision.gameObject.GetComponent<Ball>();
 
-        if (otherBall != null && !otherBall.hasMered && otherBall.ballType == ballType)     //충돌한 것이 공이고 타입이 같다면 (합쳐지지 않았을 경우)
+        if (otherBall != null && !otherBall.hasMered && otherBall.ballType == ballType)
         {
-            hasMered = true;                //합쳤다고 표시
-            otherBall.hasMered = true;
-
-            Vector3 mergePosition = (transform.position + otherBall.transform.position) / 2f;       //두 공의 중간 위치 계산
-
-            //게임 매니저에서 Merge 구현된 것을 호출
-            BallGame gameManager = FindObjectOfType<BallGame>();
-            if(gameManager != null)
+            // 최대 크기이면 병합하지 않음
+            if (ballType >= ballShooter.ballPrefab.Length - 1)
             {
-                gameManager.MergeBalls(ballType, mergePosition);            //함수를 실행하고 호출한다.
+                return;
             }
 
-            //공들 제거
-            //Destroy(otherBall.gameObject);
-           // Destroy(gameObject);
+            hasMered = true;
+            otherBall.hasMered = true;
+
+            Vector3 mergePosition = (transform.position + otherBall.transform.position) / 2f;
+
+            BallShooter gameManager = FindObjectOfType<BallShooter>();
+            if (gameManager != null)
+            {
+                gameManager.MergeBalls(ballType, mergePosition);
+            }
+
+            Destroy(otherBall.gameObject);
+            Destroy(gameObject);
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("GameOver"))
+        {
+            inGameOverZone = true;
+            gameOverZoneTimer = 0f; // 진입 시 타이머 리셋
+        }
+
+        if (collision.CompareTag("Out"))
+        {
+            if (ballShooter != null)
+            {
+                ballShooter.DecreaseScore(15);
+            }
+
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("GameOver"))
+        {
+            inGameOverZone = false;
+            gameOverZoneTimer = 0f;
+        }
+    }
+
+    void Update()
+    {
+        if (inGameOverZone)
+        {
+            gameOverZoneTimer += Time.deltaTime;
+
+            if (gameOverZoneTimer >= 3f)
+            {
+                if (ballShooter != null)
+                {
+                    ballShooter.TriggerGameOver("공이 위험 구역에 3초 이상 머물렀습니다.");
+                }
+            }
         }
     }
 }

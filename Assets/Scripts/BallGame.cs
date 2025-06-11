@@ -32,19 +32,19 @@ public class BallGame : MonoBehaviour
     {
         if (isGameOver) return;         //게임 오버면 리턴
 
-        if(ballTimer >= 0 )                             //타이머의 시간이 0보다 클 경우
+        if (ballTimer >= 0)                             //타이머의 시간이 0보다 클 경우
         {
             ballTimer -= Time.deltaTime;
         }
 
-        if(ballTimer < 0 && ballTimer > -2)             //타이머 시간이 0과 -2 사이에 있을때 잰 함수를 호출 하고 다른 시간대로 보낸다.
+        if (ballTimer < 0 && ballTimer > -2)             //타이머 시간이 0과 -2 사이에 있을때 잰 함수를 호출 하고 다른 시간대로 보낸다.
         {
             CheckGameOVer();
             SpawnNewBall();
             ballTimer = -3.0f;                          //타이머 시간을 -3으로 보낸다.
         }
 
-        if ( currentBall != null)       //현재 생성된 공이 있을 때만 처리
+        if (currentBall != null)       //현재 생성된 공이 있을 때만 처리
         {
             Vector3 mousePosition = Input.mousePosition;                                //마우스 위치를 받아온다.
             Vector3 worldPostion = maincamera.ScreenToWorldPoint(mousePosition);        //마우스 위치를 월드 좌표로 변환
@@ -53,7 +53,7 @@ public class BallGame : MonoBehaviour
             newPostion.x = worldPostion.x;
 
             float halfBallSize = ballSizes[currentBallType] / 2;
-            if ( newPostion.x < -gameWidth / 2 + halfBallSize )
+            if (newPostion.x < -gameWidth / 2 + halfBallSize)
             {
                 newPostion.x = -gameWidth / 2 + halfBallSize;
             }
@@ -75,7 +75,7 @@ public class BallGame : MonoBehaviour
     {
         if (!isGameOver)                //게임 오버가 아닐 때만 새 공 생성
         {
-            currentBallType = Random.Range(0,3);                //0 ~ 2 사이의 랜덤 공 타입
+            currentBallType = Random.Range(0, 3);                //0 ~ 2 사이의 랜덤 공 타입
 
             Vector3 mousePosition = Input.mousePosition;        //마우스 위치를 받아온다.
             Vector3 worldPosition = maincamera.ScreenToWorldPoint(mousePosition);       //마우스 위치를 월드 좌표로 변환
@@ -85,7 +85,7 @@ public class BallGame : MonoBehaviour
             float halfBallSize = ballSizes[currentBallType] / 2;
 
             //X 의 위치가 게임 영역을 벗어나지 않도록 제한
-            spawnPosion.x = Mathf.Clamp(spawnPosion.x, - gameWidth / 2 + halfBallSize, gameWidth / 2 - halfBallSize);
+            spawnPosion.x = Mathf.Clamp(spawnPosion.x, -gameWidth / 2 + halfBallSize, gameWidth / 2 - halfBallSize);
 
             currentBall = Instantiate(ballprefabs[currentBallType], spawnPosion, Quaternion.identity);                      //공 생성
             currentBall.transform.localScale = new Vector3(ballSizes[currentBallType], ballSizes[currentBallType], 1);      //공 크기 설정
@@ -100,10 +100,10 @@ public class BallGame : MonoBehaviour
 
     void DropBall()
     {
-        if(currentBall == null) return;
+        if (currentBall == null) return;
 
         Rigidbody2D rb = currentBall.GetComponent<Rigidbody2D>();
-        if(rb != null)
+        if (rb != null)
         {
             rb.gravityScale = 1f;               //중력을 원래 값으로 복구 시킨다.
 
@@ -115,7 +115,7 @@ public class BallGame : MonoBehaviour
 
     public void MergeBalls(int ballType, Vector3 position)
     {
-        if(ballType < ballprefabs.Length - 1)           //마지막 과일타입이 아니라면
+        if (ballType < ballprefabs.Length - 1)           //마지막 과일타입이 아니라면
         {
             GameObject newBall = Instantiate(ballprefabs[ballType + 1], position, Quaternion.identity);
             newBall.transform.localScale = new Vector3(ballSizes[ballType + 1], ballSizes[ballType + 1], 1.0f);
@@ -130,9 +130,9 @@ public class BallGame : MonoBehaviour
 
         float gameOverHeight = gameHeight;              //일정 높이보다 높은 위치에 과일이 있는지 확인
 
-        for(int i = 0; i < allBalls.Length; i++)        //모든 과일을 검사한다.
+        for (int i = 0; i < allBalls.Length; i++)        //모든 과일을 검사한다.
         {
-            if(allBalls[i] != null)
+            if (allBalls[i] != null)
             {
                 Rigidbody2D rb = allBalls[i].GetComponent<Rigidbody2D>();
 
