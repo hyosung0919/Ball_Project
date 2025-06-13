@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Out
+  - GameOver
+  - Ball
   layers:
   - Default
   - TransparentFX

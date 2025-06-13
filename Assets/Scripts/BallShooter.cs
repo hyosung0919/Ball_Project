@@ -16,6 +16,9 @@ public class BallShooter : MonoBehaviour
     public float gameHeight = 0.5f;
     public TMP_Text scoreText;
     private int score = 0;
+    public TMP_Text countdownText;
+    public TMP_Text resultText;
+    public GameObject gameOverPanel;
 
     [Header("드래그 설정")]
     public float maxDragDistance = 3f;      // 최대 드래그 거리
@@ -246,5 +249,13 @@ public class BallShooter : MonoBehaviour
         if (isGameOver) return;
 
         isGameOver = true;
+
+        // 패널 보이게 하기
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+
+        // 텍스트 설정
+        if (resultText != null)
+            resultText.text = $"게임 종료 \n점수: {score}점";
     }
 }
