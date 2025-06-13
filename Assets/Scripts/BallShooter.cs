@@ -257,5 +257,7 @@ public class BallShooter : MonoBehaviour
         // 텍스트 설정
         if (resultText != null)
             resultText.text = $"게임 종료 \n점수: {score}점";
+
+        Ranking.SaveNewScore(score);
     }
 }
