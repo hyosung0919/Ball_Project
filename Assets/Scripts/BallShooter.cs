@@ -62,7 +62,7 @@ public class BallShooter : MonoBehaviour
         {
             float time = i * 0.1f;
             Vector2 point = CalculateTrajectoryPoint(startPos, launchVelocity, time);
-            aimLine.SetPosition(i, new Vector3(point.x, point.y, 0));
+            aimLine.SetPosition(i, new Vector3(point.x, point.y, -1));
         }
     }
 
@@ -250,14 +250,21 @@ public class BallShooter : MonoBehaviour
 
         isGameOver = true;
 
-        // 패널 보이게 하기
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(true);
-
-        // 텍스트 설정
+        // 점수 텍스트 설정
         if (resultText != null)
             resultText.text = $"게임 종료 \n점수: {score}점";
 
+        // 점수 저장
         Ranking.SaveNewScore(score);
+
+        // 패널은 1초 뒤에 띄움
+        StartCoroutine(ShowGameOverPanelWithDelay(1f));
+    }
+    private IEnumerator ShowGameOverPanelWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
     }
 }
