@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using TMPro;
-using UnityEditorInternal;
+//using UnityEditorInternal;
+using UnityEngine.EventSystems;
 
 public class BallShooter : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class BallShooter : MonoBehaviour
     public TMP_Text countdownText;
     public TMP_Text resultText;
     public GameObject gameOverPanel;
+    public GameObject pausePanel;
+    private bool isPaused = false;
+    public AudioClip shootSound;
+    public AudioClip mergeSound;
+    private AudioSource audioSource;
 
     [Header("드래그 설정")]
     public float maxDragDistance = 3f;      // 최대 드래그 거리
@@ -30,12 +36,14 @@ public class BallShooter : MonoBehaviour
     private bool isDragging = false;        // 드래그 중인지
     private Vector2 dragStartPos;           // 드래그 시작 위치 (2D)
     private Camera mainCamera;              // 메인 카메라
-                                                                //게임 종료 높이
+                                            //게임 종료 높이
     private bool isGameOver = false;                                                     //게임 상태
 
     void Start()
     {
         mainCamera = Camera.main;
+
+        audioSource = GetComponent<AudioSource>();
 
         // 조준선 설정
         if (aimLine != null)
@@ -74,7 +82,12 @@ public class BallShooter : MonoBehaviour
 
     void Update()
     {
-        if (isGameOver) return;         //게임 오버면 리턴
+        if (isGameOver || isPaused) return;
+
+        // UI 위를 클릭 중이면 입력 무시
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         HandleInput();
     }
 
@@ -162,6 +175,10 @@ public class BallShooter : MonoBehaviour
 
         // 잠시 후 새 구체 생성
         Invoke("CreateNewBall", 1f);
+        if (shootSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shootSound);
+        }
     }
 
     void CreateNewBall()
@@ -215,6 +232,7 @@ public class BallShooter : MonoBehaviour
     }
     public void MergeBalls(int ballType, Vector3 position)
     {
+        PlaySound(mergeSound);
         // 최대 크기 공이면 병합하지 않고 종료
         if (ballType >= ballPrefab.Length - 1)
         {
@@ -267,4 +285,36 @@ public class BallShooter : MonoBehaviour
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
     }
+    public void TogglePause()
+    {
+        if (isPaused)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
+        }
+    }
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+        isPaused = true;
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        isPaused = false;
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+    }
+    public void PlaySound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+            audioSource.PlayOneShot(clip);
+    }
 }
+
