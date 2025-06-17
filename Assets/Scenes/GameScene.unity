@@ -2014,7 +2014,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: d5125151c25c9ea479a535c43db32ac4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2046,7 +2046,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.26530647
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2110,11 +2110,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballPrefab:
+  - {fileID: 3832217349413807503, guid: b2f6e973fc3743349b616a0a14bcc1f4, type: 3}
   - {fileID: 3832217349413807503, guid: 35d00c1084205ea4b998deeb7e90c72f, type: 3}
-  - {fileID: 3832217349413807503, guid: 38351cb30b39dc747a5529f1bd817844, type: 3}
   - {fileID: 3832217349413807503, guid: 302c998303dd94141a01145b733b7057, type: 3}
   - {fileID: 3832217349413807503, guid: ec63698e6b0ca70489acd506dc9ebc4e, type: 3}
-  - {fileID: 3832217349413807503, guid: b2f6e973fc3743349b616a0a14bcc1f4, type: 3}
+  - {fileID: 3832217349413807503, guid: 38351cb30b39dc747a5529f1bd817844, type: 3}
   - {fileID: 3832217349413807503, guid: b3e93a693eb4a914d9c948c7810da222, type: 3}
   ballSizes:
   - 0.5
